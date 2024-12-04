@@ -3,7 +3,7 @@ import time
 
 LENLED = 50
 
-strip = PixelStrip(LENLED, 18)
+strip = PixelStrip(LENLED, 12)
 strip.begin()
 strip.setBrightness(0)
 

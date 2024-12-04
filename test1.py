@@ -1,10 +1,21 @@
+from rpi_ws281x import PixelStrip, Color
 import pigpio
 import time
+
+
+
  
 # Initialisation de la connexion pigpio
 pi = pigpio.pi()
 BUZZER_PIN = 18
 pi.set_mode(BUZZER_PIN, pigpio.OUTPUT)
+
+
+LENLED = 50
+
+strip = PixelStrip(LENLED, 12)
+strip.setBrightness(50)
+strip.begin()
 
 ##https://www.seventhstring.com/resources/notefrequencies.html
 notes = {
@@ -31,6 +42,14 @@ melody = [
 ]
 
 
+color_table = {
+    'E4': (255, 255, 255),  
+    'G4': (255, 0, 0),     
+    'C4': (0, 255, 0),      
+    'D4': (255, 255, 0),    
+    'F4': (0, 0, 255),    
+    'Silence': (0, 0, 0),   
+}
  
 def play_tone(pin, frequency, duration):
     if frequency == 0:
@@ -42,15 +61,29 @@ def play_tone(pin, frequency, duration):
     pi.hardware_PWM(pin, 0, 0)
  
 
+def change_color(strip, LENLED, r, g, b):
+    for i in range(LENLED):
+        strip.setPixelColor(i, Color(r, g, b))
+    strip.show()
+
+
+
+
 try:
-    print("Playing 'We Wish You a Merry Christmas'...")
+    print("Playing 'Jingle Bell'...")
     for note, duration in melody:
         frequency = notes.get(note, 0)
+
+        if note in color_table:
+            r, g, b = color_table[note]
+            change_color(strip, LENLED, r, g, b)
+
         play_tone(BUZZER_PIN, frequency, duration)
         time.sleep(1.0 / 15)
     print("Done!")
 except KeyboardInterrupt:
     print("Interrupted!")
     pi.write(BUZZER_PIN, 0)
-finally:
-    pi.stop()
+    for i in range(LENLED):
+        strip.setPixelColor(i, Color(0,0,0))
+    strip.show()
