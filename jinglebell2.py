@@ -29,6 +29,8 @@ melody = [
    ('F4', 0.5), ('F4', 0.5), ('F4', 0.5), ('F4', 0.5),   ('F4', 0.5), ('E4', 0.5), ('E4', 0.5), ('E4', 0.5),
    ('G4', 0.5), ('G4', 0.5), ('F4', 0.5), ('D4', 0.5),   ('C4', 2),
 ]
+
+
  
 def play_tone(pin, frequency, duration):
     if frequency == 0:
@@ -39,15 +41,16 @@ def play_tone(pin, frequency, duration):
     time.sleep(duration)
     pi.hardware_PWM(pin, 0, 0)
  
-def start(stop_thread):
-    while True:
-        if stop_thread():
-            print("STOP music")
-            break  
-        print("Playing 'Jingle Bell'...")
-        for note, duration in melody:
-            frequency = notes.get(note, 0)
-            play_tone(BUZZER_PIN, frequency, duration)
-            time.sleep(1.0 / 15)
-        print("Done!")
-        time.sleep(1)
+
+try:
+    print("Playing 'We Wish You a Merry Christmas'...")
+    for note, duration in melody:
+        frequency = notes.get(note, 0)
+        play_tone(BUZZER_PIN, frequency, duration)
+        time.sleep(1.0 / 15)
+    print("Done!")
+except KeyboardInterrupt:
+    print("Interrupted!")
+    pi.write(BUZZER_PIN, 0)
+finally:
+    pi.stop()

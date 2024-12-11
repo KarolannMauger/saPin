@@ -19,12 +19,10 @@ principal_thread = None
 stop_principal_thread = False
 
 def stop_sensor():
-    print('stop sensor')
     global stop_principal_thread
     stop_principal_thread = True  
 
 def restart_principal_thread():
-    print('restart')
     global principal_thread, stop_principal_thread
     stop_principal_thread = False  
     if principal_thread is not None and principal_thread.is_alive():
@@ -34,7 +32,6 @@ def restart_principal_thread():
     principal_thread.start()
 
 def mode1():
-    print('mode1')
     led_music_thread = Thread(target=led_music.start)
     ##matrix_thread = Thread(target=matrix_display.start)
     ##lcd_thread = Thread(target=lcd_message.start)
@@ -48,7 +45,6 @@ def mode1():
     ##lcd_thread.join()
 
 def mode2():
-    print("coucou")
     global principal_thread
 
     if principal_thread is None or not principal_thread.is_alive():
