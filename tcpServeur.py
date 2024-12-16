@@ -17,7 +17,7 @@ strip.begin()
 
 # Create the server socket
 server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-server_socket.bind(('0.0.0.0', 12346))
+server_socket.bind(('0.0.0.0', 12349))
 server_socket.listen(5)
 
 # Queue to store data received by threads
@@ -119,6 +119,16 @@ def start_mode2():
         while True:
             for i in range(LENLED):
                 strip.setPixelColor(i, Color(255,0,0))
+                strip.show()
+            if fadeinfadeout():
+                break 
+            for i in range(LENLED):
+                strip.setPixelColor(i, Color(0,255,0))
+                strip.show()
+            if fadeinfadeout():
+                break 
+            for i in range(LENLED):
+                strip.setPixelColor(i, Color(0,0,255))
                 strip.show()
             if fadeinfadeout():
                 break          
