@@ -4,9 +4,20 @@ import queue
 from rpi_ws281x import PixelStrip, Color
 import time
 
+LENLED = 50
+Y1 = (100,255,0)
+R1 = (0,200,0)
+B1 = (100,100,255)
+B2 = (0,0,255)
+C1 = Y1
+C2 = R1
+
+strip = PixelStrip(LENLED, 12)
+strip.begin()
+
 # Create the server socket
 server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-server_socket.bind(('0.0.0.0', 12345))
+server_socket.bind(('0.0.0.0', 12346))
 server_socket.listen(5)
 
 # Queue to store data received by threads
@@ -32,11 +43,6 @@ def handle_client(connection, client_address):
         connection.close()
         print(f"Connection with {client_address} closed.")
 
-LENLED = 50
-
-strip = PixelStrip(LENLED, 12)
-strip.begin()
-strip.setBrightness(0)
 
 def fadeinfadeout():
     for b in range(0,51,1):
@@ -54,10 +60,32 @@ def fadeinfadeout():
             return True
         time.sleep(0.03)
     return False
+
+def bicolor():
+        for i in range(LENLED):
+            if i%2 == 0:
+                strip.setPixelColor(i, Color(C1[0],C1[1],C1[2])) #255,100,0 yellow
+            elif i%2 == 1:
+                strip.setPixelColor(i, Color(C2[0],C2[1],C2[2])) #200,0,0
+        strip.show()
+        time.sleep(0.3)
+        for j in range(LENLED):
+            if j%2 == 0:
+                strip.setPixelColor(j, Color(C2[0],C2[1],C2[2]))
+            elif j%2 == 1:
+                strip.setPixelColor(j, Color(C1[0],C1[1],C1[2]))
+        strip.show()
+        time.sleep(0.3)
+        if shouldStop():
+            ledClose()
+            return True
+        return False
+
 def ledClose():
     for i in range(LENLED):
         strip.setPixelColor(i, Color(0,0,0))
-    strip.show() 
+    strip.show()
+
 def shouldStop():
     try:
         # Try to get data from the queue without blocking
@@ -75,16 +103,25 @@ def shouldStop():
         # If the queue is empty, we don't block and just continue processing other things
         pass
 
-def start():
+def start_mode1():
     try:
+        strip.setBrightness(50)
         while True:
-            print("Start")
+            if bicolor():
+                break
+    except KeyboardInterrupt:
+        ledClose()
+        print("programme interrompu")
+
+def start_mode2():
+    try:
+        strip.setBrightness(0)
+        while True:
             for i in range(LENLED):
                 strip.setPixelColor(i, Color(255,0,0))
                 strip.show()
             if fadeinfadeout():
-                break
-           
+                break          
     except KeyboardInterrupt:
         ledClose()
         print("programme interrompu")
@@ -92,7 +129,7 @@ def start():
 
 
 connection, client_address = server_socket.accept()
-# Start a new thread for each client to handle communication
+# start_mode2 a new thread for each client to handle communication
 client_thread = threading.Thread(target=handle_client, args=(connection, client_address))
 client_thread.daemon = True  # This allows the thread to exit when the main program exits
 client_thread.start()
@@ -109,8 +146,10 @@ while True:
         # Simulate some processing
         time.sleep(0.1)  # Simulate time spent processing data
         data_queue.task_done()
-        if data == "mod1":
-            start()
+        if data == "mode1":
+            start_mode1()
+        elif data == "mode2":
+            start_mode2()
     except queue.Empty:
         # If the queue is empty, we don't block and just continue processing other things
         pass
