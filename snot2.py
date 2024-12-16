@@ -28,7 +28,6 @@ def toto(stop_toto):
     stop_servo_thread = False
     while True:
         if stop_toto():
-            print("Button pressed, exiting loop.")
             if servo_thread is not None and servo_thread.is_alive():
                 stop_servo_thread = True
                 servo_thread.join()
