@@ -1,92 +1,61 @@
 import time
 import pigpio
+import tcp_connection
+import principal_thread
+import mode_controller
 from threading import Thread
-import led_music
-##import matrix_display
-##import lcd_message
-import TEMT6000_sensor
 
-BTN = 27
+
+
 pi = pigpio.pi()
+BTN = 27  
+pi.set_mode(BTN, pigpio.INPUT)
+pi.set_pull_up_down(BTN, pigpio.PUD_UP)
+
+BUZZER_PIN = 18
+pi.set_mode(BUZZER_PIN, pigpio.OUTPUT)
+
+
 cur = pi.read(BTN)
-
 last = cur
-compteur = 0
 count = 0
+compteur = 0
 isPressed = False
-
-principal_thread = None
-stop_principal_thread = False
-
-def stop_sensor():
-    print('stop sensor')
-    global stop_principal_thread
-    stop_principal_thread = True  
-
-def restart_principal_thread():
-    print('restart')
-    global principal_thread, stop_principal_thread
-    stop_principal_thread = False  
-    if principal_thread is not None and principal_thread.is_alive():
-        stop_sensor()
-        principal_thread.join()  
-    principal_thread = Thread(target=TEMT6000_sensor.start, args=(lambda: stop_principal_thread,))
-    principal_thread.start()
-
-def mode1():
-    print('mode1')
-    led_music_thread = Thread(target=led_music.start)
-    ##matrix_thread = Thread(target=matrix_display.start)
-    ##lcd_thread = Thread(target=lcd_message.start)
-
-    led_music_thread.start()
-    ##matrix_thread.start()
-    ##lcd_thread.start()
-
-    led_music_thread.join()
-    ##matrix_thread.join()
-    ##lcd_thread.join()
-
-def mode2():
-    print("coucou")
-    global principal_thread
-
-    if principal_thread is None or not principal_thread.is_alive():
-        restart_principal_thread()  
-
-    if stop_principal_thread:
-        stop_sensor()
-        return
 
 if __name__ == '__main__':
     try:
+        tcp_connection.establish_tcp_connection()
+        time.sleep(0.5)
+        mode_controller.mode2() 
         while True:
             cur = pi.read(BTN)
 
+            
             if not isPressed:
-                if cur == 1:
+                if cur == 1: 
                     count = 0
-                elif count < 4:
+                elif count < 4: 
                     count += 1
-                elif count == 4:
-                    compteur += 1
-                    count = 0
-                    if compteur % 2 != 0:
-                        stop_sensor()  
-                        mode2()
-                    else:
-                        stop_sensor()  
-                        mode1()
-                    isPressed = True
-            else:
-                if cur == 0:  
-                    count = 0
-                elif count < 4:
-                    count += 1
-                elif count == 4:
-                    count += 1
-                    isPressed = False
+                elif count == 4:  
+                    count = 0 
+                    if compteur % 2 != 0:  
+                        principal_thread.stop_sensor()  
+                        mode_controller.mode2()  
+                    else:  
+                        principal_thread.stop_sensor()  
+                        mode_controller.mode1()  
+                    compteur += 1 
+                    isPressed = True  
 
-            last = cur
+            if cur == 0:  
+                isPressed = False
+
+            last = cur  
+
     except KeyboardInterrupt:
+        tcp_connection.send_tcp_message("stop")
         print("\nJoyeux NAEL!!!")
+    finally:
+        if tcp_connection.client_socket is not None:
+            tcp_connection.client_socket.close()
+            print("Connexion TCP fermée.")

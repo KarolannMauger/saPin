@@ -40,7 +40,7 @@ def play_tone(pin, frequency, duration):
     pi.hardware_PWM(pin, 0, 0)
 
 
-def start(stop_thread):
+def start(stop_thread, client_socket):
     anim_thread = None
     stop_anim_thread = False
     
