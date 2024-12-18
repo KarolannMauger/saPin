@@ -4,7 +4,7 @@ import queue
 from rpi_ws281x import PixelStrip, Color
 import time
 
-LENLED = 50
+LEN_LED = 50
 Y1 = (100,255,0)
 R1 = (0,200,0)
 B1 = (100,100,255)
@@ -12,7 +12,7 @@ B2 = (0,0,255)
 C1 = Y1
 C2 = R1
 
-strip = PixelStrip(LENLED, 12)
+strip = PixelStrip(LEN_LED, 12)
 strip.begin()
 
 # Create the server socket
@@ -44,49 +44,49 @@ def handle_client(connection, client_address):
         print(f"Connection with {client_address} closed.")
 
 
-def fadeinfadeout():
+def fade_in_fade_out():
     for b in range(0,51,1):
         strip.setBrightness(b)
         strip.show()
-        if shouldStop():
-            ledClose()
+        if should_stop():
+            led_close()
             return True
         time.sleep(0.03)
     for b in range(50,-1,-1):
         strip.setBrightness(b)
         strip.show()
-        if shouldStop():
-            ledClose()
+        if should_stop():
+            led_close()
             return True
         time.sleep(0.03)
     return False
 
-def bicolor():
-        for i in range(LENLED):
+def bi_color():
+        for i in range(LEN_LED):
             if i%2 == 0:
                 strip.setPixelColor(i, Color(C1[0],C1[1],C1[2])) #255,100,0 yellow
             elif i%2 == 1:
                 strip.setPixelColor(i, Color(C2[0],C2[1],C2[2])) #200,0,0
         strip.show()
         time.sleep(0.3)
-        for j in range(LENLED):
+        for j in range(LEN_LED):
             if j%2 == 0:
                 strip.setPixelColor(j, Color(C2[0],C2[1],C2[2]))
             elif j%2 == 1:
                 strip.setPixelColor(j, Color(C1[0],C1[1],C1[2]))
         strip.show()
         time.sleep(0.3)
-        if shouldStop():
-            ledClose()
+        if should_stop():
+            led_close()
             return True
         return False
 
-def ledClose():
-    for i in range(LENLED):
+def led_close():
+    for i in range(LEN_LED):
         strip.setPixelColor(i, Color(0,0,0))
     strip.show()
 
-def shouldStop():
+def should_stop():
     try:
         # Try to get data from the queue without blocking
         client_address, data = data_queue.get_nowait()
@@ -107,33 +107,33 @@ def start_mode1():
     try:
         strip.setBrightness(50)
         while True:
-            if bicolor():
+            if bi_color():
                 break
     except KeyboardInterrupt:
-        ledClose()
+        led_close()
         print("programme interrompu")
 
 def start_mode2():
     try:
         strip.setBrightness(0)
         while True:
-            for i in range(LENLED):
+            for i in range(LEN_LED):
                 strip.setPixelColor(i, Color(255,0,0))
                 strip.show()
-            if fadeinfadeout():
+            if fade_in_fade_out():
                 break 
-            for i in range(LENLED):
+            for i in range(LEN_LED):
                 strip.setPixelColor(i, Color(0,255,0))
                 strip.show()
-            if fadeinfadeout():
+            if fade_in_fade_out():
                 break 
-            for i in range(LENLED):
+            for i in range(LEN_LED):
                 strip.setPixelColor(i, Color(0,0,255))
                 strip.show()
-            if fadeinfadeout():
+            if fade_in_fade_out():
                 break          
     except KeyboardInterrupt:
-        ledClose()
+        led_close()
         print("programme interrompu")
 
 
