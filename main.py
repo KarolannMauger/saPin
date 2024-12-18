@@ -20,7 +20,7 @@ cur = pi.read(BTN)
 last = cur
 count = 0
 compteur = 0
-isPressed = False
+is_pressed = False
 
 if __name__ == '__main__':
     try:
@@ -31,7 +31,7 @@ if __name__ == '__main__':
             cur = pi.read(BTN)
 
             
-            if not isPressed:
+            if not is_pressed:
                 if cur == 1: 
                     count = 0
                 elif count < 4: 
@@ -39,16 +39,16 @@ if __name__ == '__main__':
                 elif count == 4:  
                     count = 0 
                     if compteur % 2 != 0:  
-                        principal_thread.stop_sensor()  
+                        principal_thread.stop_principal_thread()  
                         mode_controller.mode2()  
                     else:  
-                        principal_thread.stop_sensor()  
+                        principal_thread.stop_principal_thread()  
                         mode_controller.mode1()  
                     compteur += 1 
-                    isPressed = True  
+                    is_pressed = True  
 
             if cur == 0:  
-                isPressed = False
+                is_pressed = False
 
             last = cur  
 
