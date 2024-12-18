@@ -15,10 +15,10 @@ moins90 = 2.5
 def rotate_servo(stop_servo_thread):
     while True:
         if stop_servo_thread():
-            print("LIGHT ON")
+            print("Servo Thread Stop")
             break
 
-        print("servo")
+        
         pi.set_PWM_dutycycle(servo,plus90)
         sleep(1)
         pi.set_PWM_dutycycle(servo,moins90)
