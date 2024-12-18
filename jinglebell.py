@@ -1,6 +1,6 @@
 import pigpio
 import time
-import staranim
+import matrice_animation
 from threading import Thread
 
 
@@ -8,7 +8,7 @@ pi = pigpio.pi()
 BUZZER_PIN = 18
 pi.set_mode(BUZZER_PIN, pigpio.OUTPUT)
 
-##https://www.seventhstring.com/resources/notefrequencies.html
+#https://www.seventhstring.com/resources/notefrequencies.html
 notes = {
    'E4': 329,
    'G4': 392,
@@ -40,16 +40,16 @@ def play_tone(pin, frequency, duration):
     pi.hardware_PWM(pin, 0, 0)
 
 
-def start(stop_thread, client_socket):
+def start(stop_jinglebell_thread, client_socket):
     anim_thread = None
     stop_anim_thread = False
     
     
     def start_animation():
-        staranim.start(lambda: stop_anim_thread)
+        matrice_animation.start(lambda: stop_anim_thread)
     
     while True:
-        if stop_thread(): 
+        if stop_jinglebell_thread(): 
             if anim_thread is not None and anim_thread.is_alive():
                 stop_anim_thread = True
                 anim_thread.join()  
@@ -66,7 +66,7 @@ def start(stop_thread, client_socket):
             frequency = notes.get(note, 0)
             play_tone(BUZZER_PIN, frequency, duration)
             time.sleep(1.0 / 15)  
-            if stop_thread(): 
+            if stop_jinglebell_thread(): 
                 break
         
         time.sleep(1)
