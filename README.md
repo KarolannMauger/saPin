@@ -1,4 +1,4 @@
-# SaPin 🎄
+## SaPin 🎄
 **SaPin** is an interactive and festive project based on two Raspberry Pi devices, designed to capture the spirit of Christmas through lights, music, and animations. It combines technology and creativity to create a magical and immersive experience.
 
 ---
@@ -102,7 +102,8 @@ To stop the program:
 ---
 
 ## Demo
-The demo will be added soon
+Watch the video demonstration of SaPin on YouTube:
+[![SaPin Demo](https://img.youtube.com/vi/eMOymc6_Dm0/0.jpg)](https://www.youtube.com/watch?v=eMOymc6_Dm0)
 
 
 ---
