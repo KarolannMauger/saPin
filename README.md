@@ -104,11 +104,12 @@ To stop the program:
 ## Demo
 The demo will be added soon
 
+
 ---
 
 ## Author
-- [@Loulouplou](https://www.github.com/Loulouplou)
-- [@KarolannMauger](https://www.github.com/KarolannMauger)
+- :floppy_disk: [@Loulouplou](https://www.github.com/Loulouplou)
+- :floppy_disk: [@KarolannMauger](https://www.github.com/KarolannMauger)
 
 ---
 
