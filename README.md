@@ -50,7 +50,7 @@ To resolve this, LED string management is handled by a separate Raspberry Pi via
 | SDA/SCL   | 8x8 LED matrix and ADS1115         | I²C communication      |
 | ADS1115   | Photocell sensor                   | Light intensity measurement |
 
-### Server Raspberry Pi
+#### Server Raspberry Pi
 
 | GPIO Pin  | Component                          | Description            |
 |-----------|-------------------------------------|------------------------|
