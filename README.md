@@ -6,7 +6,8 @@
 ## Features
 - 🎅 **Two operating modes:**  
   - **Mode 1:** Lights always on, music (*Jingle Bells*) played through a buzzer, and a sparkling animation on an 8x8 LED matrix.
-   -🎵 **New! Music and lights are now synchronized for a more immersive experience!** 
+
+    -🎵 **New! Music and lights are now synchronized for a more immersive experience!** 
   - **Mode 2:** Lights and the servo motor activate only in the dark, thanks to a light sensor.
 
 - ✨ **Animated decoration:** A servo motor moves a festive decoration.
