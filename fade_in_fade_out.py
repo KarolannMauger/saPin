@@ -37,3 +37,4 @@ def start():
             strip.setPixelColor(i, Color(0,0,0))
         strip.show()
         print("programme interrompu")
+start()
