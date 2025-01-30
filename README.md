@@ -5,7 +5,8 @@
 
 ## Features
 - 🎅 **Two operating modes:**  
-  - **Mode 1:** Lights always on, music (*Jingle Bells*) played through a buzzer, and a sparkling animation on an 8x8 LED matrix.  
+  - **Mode 1:** Lights always on, music (*Jingle Bells*) played through a buzzer, and a sparkling animation on an 8x8 LED matrix.
+     -🎵 **New! Music and lights are now synchronized for a more immersive experience!** 
   - **Mode 2:** Lights and the servo motor activate only in the dark, thanks to a light sensor.
 
 - ✨ **Animated decoration:** A servo motor moves a festive decoration.
@@ -31,9 +32,21 @@
 
 ## Installation
 ### Sofware Dependencies
-**Instructions will be available soon.**
+**Before the installation you need to :**
+  ```bash
+  $ sudo apt update -y
+  $ sudo apt upgrade -y
+  ```
+**Instruction will be available soon for i2c device**
 Client : Library adafruit-circuitpython-ht16k33
+  ```bash
+   $ pip3 install adafruit-circuitpython-ht16k33 --break-system-packages
+  ```
 Server : Library rpi_ws281x
+  ```bash
+   $ sudo apt install python3-pip python3-dev build-essential
+   $ sudo pip3 install rpi_ws281x
+  ```
 
 ⚠️ **Note**: The rpi_ws281x library conflicts with pigpio. 
 To resolve this, LED string management is handled by a separate Raspberry Pi via a TCP connection.
@@ -76,11 +89,10 @@ $ python3 main.py
 - **Mode 2 (default):** Automatically activates in the dark. The lights and servo motor will only work when the photocell sensor detects low light.
 - **Mode 1:** Press the button to activate all features, including:
   - Constantly lit lights
-  - Music playback (*Jingle Bells*)
+  - **Music playback (*Jingle Bells*), now synchronized with the LED lights**
   - Sparkling animation on the 8x8 LED matrix
 
 ### Step 4: Stop the Program
-
 To stop the program:
 1. Stop the client script:
    ```bash
@@ -94,17 +106,23 @@ To stop the program:
 ---
 
 ## References
-- ht16k33 Library (8x8 LED matric): Official documentation will be added soon.
-- WS281 Library (LED string): Will be added soon.
-- Musical note frquencies: Will be added soon.
-- Python Threads Tutorial: Will be added soon.
+- ht16k33 Library (8x8 LED matrix): [Adafruit HT16K33 Matrix8x8 API](https://docs.circuitpython.org/projects/ht16k33/en/latest/api.html#adafruit_ht16k33.matrix.Matrix8x8)
+- WS281 Library (LED string): [rpi-ws281x-python GitHub](https://github.com/rpi-ws281x/rpi-ws281x-python/tree/master)
+- Musical note frquencies: [Musical note frequencies](https://www.seventhstring.com/resources/notefrequencies.html)
+- Jingle bell: [Jingle bell - Beginner version](https://pianognu.blogspot.com/2015/08/vive-le-vent-version-debutant.html)
+- Python Threads Tutorial: [Multithreading in Python - Set 1](https://www.geeksforgeeks.org/multithreading-python-set-1/)
 
 ---
 
 ## Demo
-Watch the video demonstration of SaPin on YouTube:
-[![SaPin Demo](https://img.youtube.com/vi/eMOymc6_Dm0/0.jpg)](https://www.youtube.com/watch?v=eMOymc6_Dm0)
-
+🎥 **Watch SaPin in action!** Now with **music synchronized with the LED lights**!
+### 🌟 Latest Version - Music & Lights Sync
+[![SaPin Demo (Updated)](https://img.youtube.com/vi/eMOymc6_Dm0/0.jpg)](https://www.youtube.com/watch?v=eMOymc6_Dm0)
+🎶 In this updated version, the LED lights are now synchronized with the music in Mode 1 for an even more immersive experience.
+---
+### 🎬 Original Version
+[![SaPin Demo (Original)](https://img.youtube.com/vi/eMOymc6_Dm0/0.jpg)](https://www.youtube.com/watch?v=eMOymc6_Dm0)
+🔔 This was the first version of SaPin before the music0light synchronization update. It's still available if you want to see how the project evolved!
 
 ---
 
