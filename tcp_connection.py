@@ -2,8 +2,8 @@ from threading import Thread
 import socket
 
 
-SERVER_HOST = '10.10.23.212' 
-SERVER_PORT = 12347         
+SERVER_HOST = '10.10.23.205' 
+SERVER_PORT = 12345    
 client_socket = None  
 
 def establish_tcp_connection():
