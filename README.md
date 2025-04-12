@@ -88,11 +88,11 @@ PORT = 12345  # Ensure this matches the server's port
 
 ### Server Configuration (`server/tcp_serveur.py`)
 
-- **PORT**: Set to the same port number used in the client configuration.
+- **server_socket.bind**: Set to the same port number used in the client configuration.
 
 ```python
 # Example:
-PORT = 12345  # Must match the client's port
+server_socket.bind(('0.0.0.0', 12345))
 ```
 
 ---
