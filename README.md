@@ -145,9 +145,10 @@ To stop the program:
 ## Demo
 🎥 **Watch SaPin in action!** Now with **music synchronized with the LED lights**!
 ### 🌟 Latest Version - Music & Lights Sync
-[![SaPin Demo (Updated)](https://img.youtube.com/vi/eMOymc6_Dm0/0.jpg)](https://www.youtube.com/watch?v=eMOymc6_Dm0)
+[![SaPin Demo (Updated)](https://img.youtube.com/vi/CyS0Lgz9cC4/0.jpg)](https://www.youtube.com/watch?v=CyS0Lgz9cC4)
 
 🎶 In this updated version, the LED lights are now synchronized with the music in Mode 1 for an even more immersive experience.
+
 ---
 ### 🎬 Original Version
 [![SaPin Demo (Original)](https://img.youtube.com/vi/eMOymc6_Dm0/0.jpg)](https://www.youtube.com/watch?v=eMOymc6_Dm0)
