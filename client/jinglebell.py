@@ -2,7 +2,8 @@ import pigpio
 import time
 import client.matrice_animation as matrice_animation
 from threading import Thread
-
+import queue
+import client.tcp_connection as tcp_connection
 
 pi = pigpio.pi()
 BUZZER_PIN = 18
@@ -40,33 +41,38 @@ def play_tone(pin, frequency, duration):
     pi.hardware_PWM(pin, 0, 0)
 
 
-def start(stop_jinglebell_thread, client_socket):
+def start(stop_queue):
+    while not stop_queue.empty():
+        stop_queue.get()
     anim_thread = None
     stop_anim_thread = False
     
     
     def start_animation():
         matrice_animation.start(lambda: stop_anim_thread)
-    
+    quit = False
     while True:
-        if stop_jinglebell_thread(): 
-            if anim_thread is not None and anim_thread.is_alive():
-                stop_anim_thread = True
-                anim_thread.join()  
-            break
-
-        
         if anim_thread is None or not anim_thread.is_alive():
             stop_anim_thread = False
             anim_thread = Thread(target=start_animation)
             anim_thread.start()
 
-        
+        i = 0
         for note, duration in melody:
             frequency = notes.get(note, 0)
+            tcp_connection.send_tcp_message(str(i))
+            i += 1
             play_tone(BUZZER_PIN, frequency, duration)
             time.sleep(1.0 / 15)  
-            if stop_jinglebell_thread(): 
-                break
+            try:
+                if stop_queue.get_nowait() == "stop": 
+                    quit = True
+                    break
+            except queue.Empty:
+                pass
+        if quit:
+            stop_anim_thread = True
+            anim_thread.join()
+            break
         
         time.sleep(1)

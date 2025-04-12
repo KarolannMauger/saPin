@@ -72,4 +72,4 @@ def start(stop_thread):
             break
 
         
-        sleep(1) 
+        sleep(0.05) 

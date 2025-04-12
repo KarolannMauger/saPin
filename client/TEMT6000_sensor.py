@@ -7,7 +7,8 @@ from adafruit_ads1x15.ads1115 import P0
 from adafruit_ads1x15.analog_in import AnalogIn
 from threading import Thread
 import client.servo_motor as servo_motor
- 
+import queue
+import client.tcp_connection as tcp_connection
 
 pi = pigpio.pi()
 LOW = 1
@@ -18,32 +19,38 @@ data = AnalogIn(ads, P0)
 
 # Les print en commentaire c'était pour les test si vous souhaitez voir dans le terminal qu'est-ce que le script envoie
 
- 
-def start(stop_TEMT6000_sensor, client_socket):
-    servo_thread = None
-    stop_servo_thread = False
+
+def start(stop_queue, servo_queue):
+    lastState = "stop"
+    while not stop_queue.empty():
+        stop_queue.get()
+
+    quit = False
+
     while True:
 
-        if stop_TEMT6000_sensor():
-            if servo_thread is not None and servo_thread.is_alive():
-                stop_servo_thread = True
-                servo_thread.join()
-            break  
- 
        
+ 
         if data.voltage < LOW:
-            if servo_thread is None or not servo_thread.is_alive():
-                stop_servo_thread = False
-                client_socket.sendall("mode2".encode())
-                #print("sensor mode2")
-                servo_thread = Thread(target=servo_motor.rotate_servo, args=(lambda: stop_servo_thread,))
-                servo_thread.start()
+            if(lastState == 'stop'):
+                servo_queue.put("start")
+                tcp_connection.send_tcp_message("mode3")
+                lastState = 'start'
+
 
         else:
-            if servo_thread is not None and servo_thread.is_alive():
-                stop_servo_thread = True
-                servo_thread.join()
-                client_socket.sendall("stop".encode())
-                #print("sensor stop")
+
+            if lastState == 'start':
+                tcp_connection.send_tcp_message("mode4")
+                servo_queue.put("stop")
+                lastState = 'stop'
         print(data.value, data.voltage)
+        try:
+            if stop_queue.get_nowait() == "stop": 
+                servo_queue.put("stop")
+
+                break
+        except queue.Empty:
+            pass
+
         time.sleep(0.5)
