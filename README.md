@@ -71,18 +71,45 @@ To resolve this, LED string management is handled by a separate Raspberry Pi via
 | GPIO 12   | WS2811 LED string                  | Light control          |
 
 ---
+## ⚙️ Configuration Before Starting
+
+Before running the project, ensure that the client and server are properly configured to communicate with each other.
+
+### 🖥️ Client Configuration (`client/tcp_connection.py`)
+
+- **SERVER_HOST**: Replace with the IP address of the Raspberry Pi running the server.
+- **PORT**: Set to the same port number that the server will use.
+
+```python
+# Example:
+SERVER_HOST = "192.168.1.100"  # Replace with your server's IP address
+PORT = 12345  # Ensure this matches the server's port
+```
+
+### 🧠 Server Configuration (`server/tcp_serveur.py`)
+
+- **PORT**: Set to the same port number used in the client configuration.
+
+```python
+# Example:
+PORT = 12345  # Must match the client's port
+```
+
+---
 
 ## Usage
 
 ### Step 1: Start the TCP Server
 On the Raspberry Pi controlling the LED string, run the server script:
 ```bash
+$ cd server
 $ python3 tcp_serveur.py
 ```
 
 ### Step2: Start the Client
 On the second Raspberry Pi, run the client script:
 ```bash
+$ cd client
 $ python3 main.py
 ```
 
@@ -119,10 +146,12 @@ To stop the program:
 🎥 **Watch SaPin in action!** Now with **music synchronized with the LED lights**!
 ### 🌟 Latest Version - Music & Lights Sync
 [![SaPin Demo (Updated)](https://img.youtube.com/vi/eMOymc6_Dm0/0.jpg)](https://www.youtube.com/watch?v=eMOymc6_Dm0)
+
 🎶 In this updated version, the LED lights are now synchronized with the music in Mode 1 for an even more immersive experience.
 ---
 ### 🎬 Original Version
 [![SaPin Demo (Original)](https://img.youtube.com/vi/eMOymc6_Dm0/0.jpg)](https://www.youtube.com/watch?v=eMOymc6_Dm0)
+
 🔔 This was the first version of SaPin before the music0light synchronization update. It's still available if you want to see how the project evolved!
 
 ---
