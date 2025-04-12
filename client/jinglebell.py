@@ -1,9 +1,9 @@
 import pigpio
 import time
-import matrice_animation
+import client.matrice_animation as matrice_animation
 from threading import Thread
 import queue
-import tcp_connection
+import client.tcp_connection as tcp_connection
 
 pi = pigpio.pi()
 BUZZER_PIN = 18
@@ -52,13 +52,6 @@ def start(stop_queue):
         matrice_animation.start(lambda: stop_anim_thread)
     quit = False
     while True:
-        # if stop_jinglebell_thread(): 
-        #     if anim_thread is not None and anim_thread.is_alive():
-        #         stop_anim_thread = True
-        #         anim_thread.join()  
-        #     break
-
-        
         if anim_thread is None or not anim_thread.is_alive():
             stop_anim_thread = False
             anim_thread = Thread(target=start_animation)

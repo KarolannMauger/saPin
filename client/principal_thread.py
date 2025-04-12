@@ -1,10 +1,10 @@
-import tcp_connection
+import client.tcp_connection as tcp_connection
 from threading import Thread
 import time
-import tcp_connection
+import client.tcp_connection as tcp_connection
 import queue
-import jinglebell
-import TEMT6000_sensor
+import client.jinglebell as jinglebell
+import client.TEMT6000_sensor as TEMT6000_sensor
 principal_thread = None 
 stop_principal_thread = False  
 
