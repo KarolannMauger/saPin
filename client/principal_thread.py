@@ -1,4 +1,4 @@
-import tcp_connection
+import client.tcp_connection as tcp_connection
 from threading import Thread
 
 principal_thread = None 

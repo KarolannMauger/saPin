@@ -6,7 +6,7 @@ from adafruit_ads1x15.ads1115 import ADS1115
 from adafruit_ads1x15.ads1115 import P0
 from adafruit_ads1x15.analog_in import AnalogIn
 from threading import Thread
-import servo_motor
+import client.servo_motor as servo_motor
  
 
 pi = pigpio.pi()

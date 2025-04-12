@@ -1,6 +1,6 @@
 import pigpio
 import time
-import matrice_animation
+import client.matrice_animation as matrice_animation
 from threading import Thread
 
 

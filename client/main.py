@@ -1,8 +1,8 @@
 import time
 import pigpio
-import tcp_connection
-import principal_thread
-import mode_controller
+import client.tcp_connection as tcp_connection
+import client.principal_thread as principal_thread
+import client.mode_controller as mode_controller
 from threading import Thread
 
 
