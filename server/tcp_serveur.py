@@ -17,11 +17,53 @@ strip.begin()
 
 # Create the server socket
 server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-server_socket.bind(('0.0.0.0', 12349))
+server_socket.bind(('0.0.0.0', 12345))
 server_socket.listen(5)
 
 # Queue to store data received by threads
 data_queue = queue.Queue()
+mode1_queue = queue.Queue()
+mode2_queue = queue.Queue()
+
+
+#https://www.seventhstring.com/resources/notefrequencies.html
+note_couleurs = {
+   'E4': Color(34, 120, 57),
+   'G4': Color(100, 20, 57),
+   'C4': Color(40, 0, 200),
+   'D4': Color(43, 43, 8),
+   'F4': Color(200, 200, 200),
+   'Silence': Color(0, 0, 0)
+}
+
+melody = [
+   ('E4', 0.5), ('G4', 0.5), ('C4', 1), ('D4', 0.5),
+   ('E4', 0.5), ('G4', 0.5), ('C4', 1), ('D4', 0.5),
+   ('C4', 0.5), ('D4', 0.5), ('E4', 1.5), ('Silence', 0.5),
+   ('E4', 0.5), ('G4', 0.5), ('C4', 1), ('D4', 0.5),
+   ('E4', 0.5), ('G4', 0.5), ('C4', 1), ('D4', 0.5),
+   ('E4', 0.5), ('G4', 0.5), ('C4', 1), ('D4', 0.5),
+]
+
+def led_close():
+    for i in range(LEN_LED):
+        strip.setPixelColor(i, Color(0,0,0))
+    strip.show()
+    
+def play_light(color, duration):
+    if color == None:
+        led_close()
+
+        time.sleep(duration+0.1)
+        return
+    time.sleep(duration - 0.1)
+
+def setCouleur(couleur):
+    for i in range(LEN_LED):
+        strip.setPixelColor(i, couleur)
+        strip.show()
+
+
 
 # Function to handle receiving data for each client in a separate thread
 def handle_client(connection, client_address):
@@ -44,94 +86,63 @@ def handle_client(connection, client_address):
         print(f"Connection with {client_address} closed.")
 
 
-def fade_in_fade_out():
+def fade_in_fade_out(mode2_queue):
     for b in range(0,51,1):
         strip.setBrightness(b)
         strip.show()
-        if should_stop():
-            led_close()
-            return True
-        time.sleep(0.03)
+        try:
+            if mode2_queue.get_nowait() == "stop":
+                led_close()
+                return True
+            time.sleep(0.03)
+        except queue.Empty:
+            pass
     for b in range(50,-1,-1):
         strip.setBrightness(b)
         strip.show()
-        if should_stop():
-            led_close()
-            return True
-        time.sleep(0.03)
+        try:
+            if mode2_queue.get_nowait() == "stop":
+                led_close()
+                return True
+            time.sleep(0.03)
+        except queue.Empty:
+            pass
     return False
 
-def bi_color():
-        for i in range(LEN_LED):
-            if i%2 == 0:
-                strip.setPixelColor(i, Color(C1[0],C1[1],C1[2])) #255,100,0 yellow
-            elif i%2 == 1:
-                strip.setPixelColor(i, Color(C2[0],C2[1],C2[2])) #200,0,0
-        strip.show()
-        time.sleep(0.3)
-        for j in range(LEN_LED):
-            if j%2 == 0:
-                strip.setPixelColor(j, Color(C2[0],C2[1],C2[2]))
-            elif j%2 == 1:
-                strip.setPixelColor(j, Color(C1[0],C1[1],C1[2]))
-        strip.show()
-        time.sleep(0.3)
-        if should_stop():
-            led_close()
-            return True
-        return False
-
-def led_close():
-    for i in range(LEN_LED):
-        strip.setPixelColor(i, Color(0,0,0))
-    strip.show()
-
-def should_stop():
+def start_mode2(mode2_queue):
     try:
-        # Try to get data from the queue without blocking
-        client_address, data = data_queue.get_nowait()
-        # Process the data here
-        print(f"Main thread processing data from {client_address}: {data}")
-        
-        # Simulate some processing
-        time.sleep(0.1)  # Simulate time spent processing data
-        data_queue.task_done()
-        if data == "stop":
-            return True
-        return False
-    except queue.Empty:
-        # If the queue is empty, we don't block and just continue processing other things
-        pass
-
-def start_mode1():
-    try:
-        strip.setBrightness(50)
+        active = False
         while True:
-            if bi_color():
-                break
-    except KeyboardInterrupt:
-        led_close()
-        print("programme interrompu")
+            
+            try:
+                data = mode2_queue.get_nowait()
+                if( data == "stop"):
+                    active = False
+                    
+                elif (data == "start"):
+                    active=True
+            except queue.Empty:
+                pass
+            if active:
+                active=False
+                strip.setBrightness(0)
+                while True:
+                    for i in range(LEN_LED):
+                        strip.setPixelColor(i, Color(255,0,0))
+                        strip.show()
+                    if fade_in_fade_out(mode2_queue):
 
-def start_mode2():
-    try:
-        strip.setBrightness(0)
-        while True:
-            for i in range(LEN_LED):
-                strip.setPixelColor(i, Color(255,0,0))
-                strip.show()
-            if fade_in_fade_out():
-                break 
-            for i in range(LEN_LED):
-                strip.setPixelColor(i, Color(0,255,0))
-                strip.show()
-            if fade_in_fade_out():
-                break 
-            for i in range(LEN_LED):
-                strip.setPixelColor(i, Color(0,0,255))
-                strip.show()
-            if fade_in_fade_out():
-                break          
+                        break 
+                    for i in range(LEN_LED):
+                        strip.setPixelColor(i, Color(0,255,0))
+                        strip.show()
+                    if fade_in_fade_out(mode2_queue):
+                        break 
+                    for i in range(LEN_LED):
+                        strip.setPixelColor(i, Color(0,0,255))
+                        strip.show()
+                    if fade_in_fade_out(mode2_queue):
+                        break          
     except KeyboardInterrupt:
         led_close()
         print("programme interrompu")
@@ -144,6 +155,11 @@ client_thread = threading.Thread(target=handle_client, args=(connection, client_
 client_thread.daemon = True  # This allows the thread to exit when the main program exits
 client_thread.start()
 
+
+mode2_thread = threading.Thread(target=start_mode2, args=(mode2_queue,))
+mode2_thread.daemon = True  # This allows the thread to exit when the main program exits
+mode2_thread.start()
+
 # Main server loop to accept client connections
 while True:
 
@@ -154,12 +170,27 @@ while True:
         print(f"Main thread processing data from {client_address}: {data}")
         
         # Simulate some processing
-        time.sleep(0.1)  # Simulate time spent processing data
-        data_queue.task_done()
+        time.sleep(0.01)  # Simulate time spent processing data
         if data == "mode1":
-            start_mode1()
+            mode2_queue.put("stop")
+            # mode1_queue.put("start")
         elif data == "mode2":
-            start_mode2()
+            mode1_queue.put("stop")
+            led_close()
+        elif data == "mode3":
+            mode2_queue.put("start")
+        elif data == "mode4":
+            mode2_queue.put("stop")
+            led_close()
+            
+        elif(int(data) < 100):
+            strip.setBrightness(30)
+            couleur, duration = melody[int(data)]
+           
+            for i in range(LEN_LED):
+                strip.setPixelColor(i, note_couleurs[couleur])
+            strip.show()
+            
     except queue.Empty:
         # If the queue is empty, we don't block and just continue processing other things
         pass
