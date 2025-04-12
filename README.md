@@ -71,11 +71,11 @@ To resolve this, LED string management is handled by a separate Raspberry Pi via
 | GPIO 12   | WS2811 LED string                  | Light control          |
 
 ---
-## ⚙️ Configuration Before Starting
+## Configuration Before Starting
 
 Before running the project, ensure that the client and server are properly configured to communicate with each other.
 
-### 🖥️ Client Configuration (`client/tcp_connection.py`)
+### Client Configuration (`client/tcp_connection.py`)
 
 - **SERVER_HOST**: Replace with the IP address of the Raspberry Pi running the server.
 - **PORT**: Set to the same port number that the server will use.
@@ -86,7 +86,7 @@ SERVER_HOST = "192.168.1.100"  # Replace with your server's IP address
 PORT = 12345  # Ensure this matches the server's port
 ```
 
-### 🧠 Server Configuration (`server/tcp_serveur.py`)
+### Server Configuration (`server/tcp_serveur.py`)
 
 - **PORT**: Set to the same port number used in the client configuration.
 
